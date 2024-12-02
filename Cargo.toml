@@ -23,3 +23,7 @@ path = "lib.rs"
 [[bin]]
 name = "day_1"
 path = "day_1.rs"
+
+[[bin]]
+name = "day_2"
+path = "day_2.rs"
