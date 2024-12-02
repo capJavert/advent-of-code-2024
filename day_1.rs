@@ -19,13 +19,18 @@ fn main() -> Result<(), reqwest::Error> {
         list_b.push(b);
     }
 
-    list_a.sort();
-    list_b.sort();
-
     let mut total = 0;
 
-    for (a, b) in list_a.iter().zip(list_b.iter()) {
-        total += (a - b).abs();
+    for a in list_a.iter() {
+        let mut occurances = 0;
+
+        for b in list_b.iter() {
+            if a == b {
+                occurances += 1;
+            }
+        }
+
+        total += a * occurances
     }
 
     println!("{}", total);
