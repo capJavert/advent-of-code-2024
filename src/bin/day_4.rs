@@ -10,40 +10,23 @@ fn main() -> Result<(), reqwest::Error> {
         matrix.push(line.chars().collect());
     }
 
-    for i in 0..matrix.len() {
-        for j in 0..matrix[i].len() {
-            let character = matrix[i][j];
+    for y in 0..matrix.len() {
+        for x in 0..matrix[y].len() {
+            let character = matrix[y][x];
 
-            if character == 'X' {
-                let directions = [
-                    (0, 1),   // right
-                    (1, 0),   // down
-                    (0, -1),  // left
-                    (-1, 0),  // up
-                    (1, 1),   // down-right
-                    (1, -1),  // down-left
-                    (-1, 1),  // up-right
-                    (-1, -1), // up-left
-                ];
+            if character == 'A' {
+                if y > 0 && y < matrix.len() - 1 && x > 0 && x < matrix[y].len() - 1 {
+                    let left_right = [matrix[y - 1][x - 1], matrix[y][x], matrix[y + 1][x + 1]]
+                        .iter()
+                        .collect::<String>();
 
-                for &(dx, dy) in &directions {
-                    let mut collected = String::new();
+                    let right_left = [matrix[y - 1][x + 1], matrix[y][x], matrix[y + 1][x - 1]]
+                        .iter()
+                        .collect::<String>();
 
-                    for k in 0..4 {
-                        let x = i as isize + k * dx;
-                        let y = j as isize + k * dy;
-
-                        if x >= 0
-                            && x < matrix.len() as isize
-                            && y >= 0
-                            && y < matrix[i].len() as isize
-                        {
-                            collected.push(matrix[x as usize][y as usize]);
-                        } else {
-                            break;
-                        }
-                    }
-                    if collected == "XMAS" {
+                    if (left_right == "MAS" || left_right == "SAM")
+                        && (right_left == "MAS" || right_left == "SAM")
+                    {
                         total += 1;
                     }
                 }
