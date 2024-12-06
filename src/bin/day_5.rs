@@ -15,7 +15,7 @@ fn main() -> Result<(), reqwest::Error> {
         })
         .collect::<Vec<(usize, usize)>>();
 
-    let page_updates = sections[1]
+    let mut page_updates = sections[1]
         .lines()
         .map(|line| {
             line.split(",")
@@ -26,8 +26,9 @@ fn main() -> Result<(), reqwest::Error> {
 
     let mut valid_updates = vec![];
 
-    for page_update in page_updates.iter() {
+    let is_page_update_valid = |page_update: &Vec<usize>| -> (Vec<usize>, bool) {
         let mut valid = true;
+        let mut new_page_update = page_update.clone();
 
         'checker: for (index, page) in page_update.iter().enumerate() {
             for (a, b) in page_rules.iter() {
@@ -35,6 +36,8 @@ fn main() -> Result<(), reqwest::Error> {
                     if a == page {
                         if b == page_check && index > index_check {
                             valid = false;
+                            new_page_update[index] = *b;
+                            new_page_update[index_check] = *a;
 
                             break 'checker;
                         }
@@ -43,6 +46,8 @@ fn main() -> Result<(), reqwest::Error> {
                     if b == page {
                         if a == page_check && index < index_check {
                             valid = false;
+                            new_page_update[index] = *a;
+                            new_page_update[index_check] = *b;
 
                             break 'checker;
                         }
@@ -51,8 +56,29 @@ fn main() -> Result<(), reqwest::Error> {
             }
         }
 
+        (new_page_update, valid)
+    };
+
+    let mut index = 0;
+    let mut invalid_count = 0;
+
+    while index < page_updates.len() {
+        let page_update = &page_updates[index];
+        let (new_page_update, valid) = is_page_update_valid(page_update);
+
         if valid {
-            valid_updates.push(page_update);
+            if invalid_count > 0 {
+                valid_updates.push(new_page_update);
+            }
+
+            index += 1;
+            invalid_count = 0;
+
+            continue;
+        } else {
+            invalid_count += 1;
+
+            page_updates[index] = new_page_update;
         }
     }
 
