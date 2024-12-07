@@ -5,69 +5,92 @@ use advent_of_code_2024::fetch_input;
 fn main() -> Result<(), reqwest::Error> {
     let input = fetch_input(6, 2024).expect("failed to fetch input");
 
-    let mut visited = HashSet::new();
-
     let mut matrix = input
         .lines()
         .map(|line| line.chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
 
-    let mut current_position: (i32, i32) = (0, 0);
+    let mut initial_position: (i32, i32) = (0, 0);
 
     for y in 0..matrix.len() {
         for x in 0..matrix[y].len() {
             let item = matrix[y][x];
 
             if item == '^' {
-                matrix[y][x] = '.';
-                current_position = (x.try_into().unwrap(), y.try_into().unwrap());
+                initial_position = (x.try_into().unwrap(), y.try_into().unwrap());
             }
         }
     }
 
     let directions: HashMap<char, (i32, i32)> =
         HashMap::from([('N', (0, -1)), ('E', (1, 0)), ('S', (0, 1)), ('W', (-1, 0))]);
-    let mut direction = 'N';
 
-    loop {
-        let next_movement = directions.get(&direction).unwrap();
+    let mut loops = HashSet::new();
 
-        let next_position = (
-            current_position.0 + next_movement.0,
-            current_position.1 + next_movement.1,
-        );
+    for y in 0..matrix.len() {
+        for x in 0..matrix[y].len() {
+            if matrix[y][x] != '.' {
+                continue;
+            }
 
-        let next_row = match matrix.get(next_position.1 as usize) {
-            Some(row) => row,
-            None => break,
-        };
+            let mut direction = 'N';
+            let mut current_position = initial_position.clone();
+            let mut visited = HashMap::new();
 
-        let next_item = match next_row.get(next_position.0 as usize) {
-            Some(item) => *item,
-            None => break,
-        };
+            let before_char = matrix[y][x];
+            matrix[y][x] = '#';
 
-        if next_item == '#' {
-            direction = match direction {
-                'N' => 'E',
-                'E' => 'S',
-                'S' => 'W',
-                'W' => 'N',
-                _ => 'N',
-            };
+            'loop_checker: loop {
+                loop {
+                    let next_movement = directions.get(&direction).unwrap();
+
+                    let next_position = (
+                        current_position.0 + next_movement.0,
+                        current_position.1 + next_movement.1,
+                    );
+
+                    let next_row = match matrix.get(next_position.1 as usize) {
+                        Some(row) => row,
+                        None => break 'loop_checker,
+                    };
+
+                    let next_item = match next_row.get(next_position.0 as usize) {
+                        Some(item) => *item,
+                        None => break 'loop_checker,
+                    };
+
+                    if next_item == '#' {
+                        direction = match direction {
+                            'N' => 'E',
+                            'E' => 'S',
+                            'S' => 'W',
+                            'W' => 'N',
+                            _ => 'N',
+                        }
+                    } else {
+                        current_position = next_position;
+
+                        break;
+                    }
+                }
+
+                let current_visited = visited.get(&(current_position, direction)).unwrap_or(&0);
+                let visited_count = current_visited + 1;
+
+                visited.insert((current_position, direction), visited_count);
+
+                if visited_count > 5 {
+                    loops.insert((x, y));
+
+                    break;
+                }
+            }
+
+            matrix[y][x] = before_char;
         }
-
-        let movement = directions.get(&direction).unwrap();
-
-        current_position = (
-            current_position.0 + movement.0,
-            current_position.1 + movement.1,
-        );
-
-        visited.insert(current_position);
     }
 
-    println!("{:?}", visited.len());
+    println!("{:?}", loops.len());
 
     Ok(())
 }
