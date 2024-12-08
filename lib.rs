@@ -37,14 +37,24 @@ pub fn fetch_input(day: u32, year: u32) -> Result<String, Box<reqwest::Error>> {
     }
 }
 
-pub fn print_matrix(matrix: &Vec<Vec<char>>) {
+pub fn print_matrix<F>(matrix: &Vec<Vec<char>>, callback: F)
+where
+    F: Fn(i32, i32, char),
+{
     for row in matrix {
         for item in row {
-            print!("{}", item);
+            callback(0, 0, *item);
         }
 
         println!();
     }
+}
+
+#[macro_export]
+macro_rules! print_matrix {
+    ($matrix:expr) => {
+        print_matrix($matrix, |_, _, item| print!("{}", item));
+    };
 }
 
 pub fn manhattan_distance(a: (i32, i32), b: (i32, i32)) -> i32 {

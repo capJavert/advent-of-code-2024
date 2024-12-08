@@ -20,6 +20,8 @@ fn main() -> Result<(), reqwest::Error> {
                 continue;
             }
 
+            antinodes.insert((xa as i32, ya as i32));
+
             for yb in 0..matrix.len() {
                 for xb in 0..matrix[yb].len() {
                     let point_b = matrix[yb][xb];
@@ -35,19 +37,23 @@ fn main() -> Result<(), reqwest::Error> {
                     let distance_x = xb as i32 - xa as i32;
                     let distance_y = yb as i32 - ya as i32;
 
-                    let new_antinodes = [(xb as i32 + distance_x, yb as i32 + distance_y)];
+                    let mut i = 1;
 
-                    for antinode in new_antinodes {
+                    loop {
+                        let antinode = (xb as i32 + distance_x * i, yb as i32 + distance_y * i);
+
                         if antinode.0 < 0 || antinode.1 < 0 {
-                            continue;
+                            break;
                         }
 
                         if antinode.0 >= matrix[0].len() as i32 || antinode.1 >= matrix.len() as i32
                         {
-                            continue;
+                            break;
                         }
 
                         antinodes.insert(antinode);
+
+                        i += 1;
                     }
                 }
             }
