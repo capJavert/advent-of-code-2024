@@ -27,7 +27,7 @@ fn main() -> Result<(), reqwest::Error> {
         })
         .collect();
 
-    let operators = Vec::from(['+', '*']);
+    let operators = Vec::from(['+', '*', '|']);
 
     let mut valid_tests = vec![];
 
@@ -45,6 +45,7 @@ fn main() -> Result<(), reqwest::Error> {
                 match op {
                     '+' => result += item,
                     '*' => result *= item,
+                    '|' => result = format!("{}{}", result, item).parse().unwrap(),
                     _ => unreachable!(),
                 };
             }
