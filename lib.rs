@@ -36,3 +36,17 @@ pub fn fetch_input(day: u32, year: u32) -> Result<String, Box<reqwest::Error>> {
         }
     }
 }
+
+pub fn print_matrix(matrix: &Vec<Vec<char>>) {
+    for row in matrix {
+        for item in row {
+            print!("{}", item);
+        }
+
+        println!();
+    }
+}
+
+pub fn manhattan_distance(a: (i32, i32), b: (i32, i32)) -> i32 {
+    (a.0 - b.0).abs() + (a.1 - b.1).abs()
+}
