@@ -6,9 +6,10 @@ enum BlockKind {
     Free,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Block {
     id: usize,
+    size: usize,
     kind: BlockKind,
 }
 
@@ -37,43 +38,70 @@ fn main() -> Result<(), reqwest::Error> {
                 0
             };
 
-            for _ in 0..size {
-                acc.push(Block {
-                    id: block_id,
-                    kind: block_kind,
-                });
-            }
+            acc.push(Block {
+                id: block_id,
+                size,
+                kind: block_kind,
+            });
 
             acc
         });
 
-    loop {
-        let first_free_block = blocks
+    for file in blocks
+        .clone()
+        .iter()
+        .rev()
+        .filter(|block| block.kind == BlockKind::File)
+    {
+        for (first_free_block, free_space) in blocks
             .iter()
-            .position(|block| block.kind == BlockKind::Free)
-            .unwrap();
-        let last_file_block = blocks
-            .iter()
-            .rposition(|block| block.kind == BlockKind::File)
-            .unwrap();
+            .enumerate()
+            .filter(|block| block.1.kind == BlockKind::Free)
+        {
+            if free_space.size < file.size {
+                continue;
+            }
 
-        if last_file_block + 1 == first_free_block {
+            let last_file_block = blocks.iter().position(|block| block.id == file.id).unwrap();
+
+            if last_file_block < first_free_block {
+                continue;
+            }
+
+            let diff = free_space.size - file.size;
+
+            blocks.swap(first_free_block, last_file_block);
+
+            if diff > 0 {
+                blocks[last_file_block].size = file.size;
+
+                blocks.insert(
+                    first_free_block + 1,
+                    Block {
+                        id: 0,
+                        size: diff,
+                        kind: BlockKind::Free,
+                    },
+                );
+            }
+
             break;
         }
-
-        blocks.swap(first_free_block, last_file_block);
     }
 
-    let checksum = blocks
-        .into_iter()
-        .enumerate()
-        .fold(0, |acc, (index, block)| {
+    let mut block_index = 0;
+
+    let checksum = blocks.into_iter().fold(0, |mut acc, block| {
+        for _ in 0..block.size {
             if block.kind == BlockKind::File {
-                acc + block.id * index
-            } else {
-                acc
+                acc += block.id * block_index;
             }
-        });
+
+            block_index += 1;
+        }
+
+        acc
+    });
 
     println!("{}", checksum);
 
