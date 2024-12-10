@@ -1,11 +1,11 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use advent_of_code_2024::fetch_input;
 
 fn find_path(
     next: (i32, i32),
     path: &mut Vec<(i32, i32)>,
-    paths: &mut HashSet<(i32, i32)>,
+    paths: &mut Vec<Vec<(i32, i32)>>,
     matrix: &Vec<Vec<i32>>,
 ) {
     path.push(next);
@@ -17,7 +17,7 @@ fn find_path(
         .unwrap();
 
     if field == &9 {
-        paths.insert(path.last().unwrap().clone());
+        paths.push(path.clone());
     } else {
         let directions = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
@@ -68,7 +68,7 @@ fn main() -> Result<(), reqwest::Error> {
                 continue;
             }
 
-            let mut paths = HashSet::new();
+            let mut paths = vec![];
 
             find_path((x as i32, y as i32), &mut vec![], &mut paths, &matrix);
 
