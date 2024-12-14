@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use advent_of_code_2024::fetch_input;
 use regex::Regex;
 
@@ -44,41 +42,34 @@ fn main() -> Result<(), reqwest::Error> {
         }
     };
 
-    for _ in 0..100 {
-        for robot in robots.iter_mut() {
+    for second in 0..10000 {
+        for robot_index in 0..robots.len() {
+            let robot = robots.get_mut(robot_index).unwrap();
             robot.position.0 += robot.velocity.0;
             robot.position.1 += robot.velocity.1;
 
             robot.position.0 = teleport(robot.position.0, width);
             robot.position.1 = teleport(robot.position.1, height);
         }
-    }
 
-    let quadrants = [
-        (0, width / 2, 0, height / 2),
-        (width / 2 + 1, width, 0, height / 2),
-        (0, width / 2, height / 2 + 1, height),
-        (width / 2 + 1, width, height / 2 + 1, height),
-    ];
+        if second > 5000 {
+            println!("Second: {}", second);
 
-    let result = robots.iter().fold(HashMap::new(), |mut acc, robot| {
-        match quadrants.iter().position(|(x1, x2, y1, y2)| {
-            robot.position.0 >= *x1
-                && robot.position.0 < *x2
-                && robot.position.1 >= *y1
-                && robot.position.1 < *y2
-        }) {
-            Some(index) => {
-                let entry = acc.entry(index).or_insert(0);
-                *entry += 1;
+            for y in 0..height {
+                let mut line = String::from("");
+
+                for x in 0..width {
+                    if robots.iter().any(|robot| robot.position == (x, y)) {
+                        line += " # ";
+                    } else {
+                        line += " . ";
+                    }
+                }
+
+                println!("{}", line);
             }
-            None => (),
-        };
-
-        acc
-    });
-
-    println!("{:?}", result.values().fold(1, |acc, value| acc * value));
+        }
+    }
 
     Ok(())
 }
