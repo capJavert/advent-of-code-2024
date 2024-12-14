@@ -1,7 +1,7 @@
 use advent_of_code_2024::fetch_input;
 use regex::Regex;
 
-fn solve(machine: &Machine) -> Option<(i32, i32)> {
+fn solve(machine: &Machine) -> Option<(i64, i64)> {
     // Exquations example
     // Equation 1: 94x + 22y = 8400
     // Equation 2: 34x + 67y = 5400
@@ -32,12 +32,12 @@ fn solve(machine: &Machine) -> Option<(i32, i32)> {
 
 #[derive(Debug)]
 struct Machine {
-    a_x: i32,
-    a_y: i32,
-    b_x: i32,
-    b_y: i32,
-    prize_x: i32,
-    prize_y: i32,
+    a_x: i64,
+    a_y: i64,
+    b_x: i64,
+    b_y: i64,
+    prize_x: i64,
+    prize_y: i64,
 }
 
 fn main() -> Result<(), reqwest::Error> {
@@ -45,6 +45,8 @@ fn main() -> Result<(), reqwest::Error> {
 
     let button_match = Regex::new(r"Button (A|B): X\+([0-9]+), Y\+([0-9]+)").unwrap();
     let prize_match = Regex::new(r"Prize: X=([0-9]+), Y=([0-9]+)").unwrap();
+
+    let offset = 10000000000000;
 
     let mut machines = input.lines().fold(
         vec![Machine {
@@ -64,14 +66,14 @@ fn main() -> Result<(), reqwest::Error> {
 
                     if captures.get(1).unwrap().as_str() == "A" {
                         current_machine.a_x =
-                            captures.get(2).unwrap().as_str().parse::<i32>().unwrap();
+                            captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
                         current_machine.a_y =
-                            captures.get(3).unwrap().as_str().parse::<i32>().unwrap();
+                            captures.get(3).unwrap().as_str().parse::<i64>().unwrap();
                     } else {
                         current_machine.b_x =
-                            captures.get(2).unwrap().as_str().parse::<i32>().unwrap();
+                            captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
                         current_machine.b_y =
-                            captures.get(3).unwrap().as_str().parse::<i32>().unwrap();
+                            captures.get(3).unwrap().as_str().parse::<i64>().unwrap();
                     }
                 } else {
                     let current_machine = acc.last_mut().unwrap();
@@ -79,9 +81,9 @@ fn main() -> Result<(), reqwest::Error> {
                     let captures = prize_match.captures(line).unwrap();
 
                     current_machine.prize_x =
-                        captures.get(1).unwrap().as_str().parse::<i32>().unwrap();
+                        captures.get(1).unwrap().as_str().parse::<i64>().unwrap() + offset;
                     current_machine.prize_y =
-                        captures.get(2).unwrap().as_str().parse::<i32>().unwrap();
+                        captures.get(2).unwrap().as_str().parse::<i64>().unwrap() + offset;
 
                     acc.push(Machine {
                         a_x: 0,
