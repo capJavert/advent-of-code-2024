@@ -41,9 +41,9 @@ pub fn print_matrix<F>(matrix: &Vec<Vec<char>>, callback: F)
 where
     F: Fn(i32, i32, char),
 {
-    for row in matrix {
-        for item in row {
-            callback(0, 0, *item);
+    for y in 0..matrix.len() {
+        for x in 0..matrix[y].len() {
+            callback(x as i32, y as i32, matrix[y][x]);
         }
 
         println!();
