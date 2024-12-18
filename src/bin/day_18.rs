@@ -1,12 +1,11 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::{
+    collections::{HashSet, VecDeque},
+    vec,
+};
 
 use advent_of_code_2024::fetch_input;
 
-fn bfs(
-    start: (isize, isize),
-    end: (isize, isize),
-    bounds: &HashMap<(usize, usize), bool>,
-) -> Option<isize> {
+fn bfs(start: (isize, isize), end: (isize, isize), matrix: &Vec<Vec<char>>) -> Option<isize> {
     let mut seen = HashSet::new();
     let mut to_visit = VecDeque::from([(start, 0)]);
 
@@ -22,11 +21,11 @@ fn bfs(
         for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
             let np = (cp.0 + dx, cp.1 + dy);
             if 0 <= np.0
-                && np.0 <= 70
+                && np.0 < matrix[0].len() as isize
                 && 0 <= np.1
-                && np.1 <= 70
+                && np.1 < matrix.len() as isize
                 && !seen.contains(&np)
-                && !bounds.contains_key(&(np.0 as usize, np.1 as usize))
+                && matrix[np.1 as usize][np.0 as usize] != '#'
             {
                 to_visit.push_back((np, cd + 1));
             }
@@ -44,34 +43,38 @@ fn main() -> Result<(), reqwest::Error> {
     let size = (71, 71);
     let limit = 1024;
 
-    let mut bytes_map = HashMap::new();
+    let mut bytes_map = vec![];
 
-    for (index, line) in input.lines().enumerate() {
+    for line in input.lines() {
         let chars = line
             .split(',')
             .map(|item| item.parse::<usize>().unwrap())
             .collect::<Vec<_>>();
 
-        if index >= limit {
-            break;
-        }
-
-        bytes_map.insert((chars[0], chars[1]), true);
+        bytes_map.push((chars[0], chars[1]));
     }
 
     let mut matrix = vec![vec!['.'; size.0]; size.1];
 
-    for y in 0..size.1 + 1 {
-        for x in 0..size.0 + 1 {
-            if bytes_map.contains_key(&(x, y)) {
-                matrix[y][x] = '#';
+    let mut byte = 0;
+
+    loop {
+        let byte_location = bytes_map.get(byte).unwrap();
+
+        matrix[byte_location.1][byte_location.0] = '#';
+
+        if byte > limit {
+            match bfs((0, 0), (70, 70), &matrix) {
+                Some(_) => {}
+                None => {
+                    println!("{:?}", byte_location);
+
+                    break;
+                }
             }
         }
-    }
 
-    match bfs((0, 0), (70, 70), &bytes_map) {
-        Some(result) => println!("{:?}", result),
-        None => panic!("no path found"),
+        byte += 1;
     }
 
     Ok(())
