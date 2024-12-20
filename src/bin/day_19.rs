@@ -43,9 +43,7 @@ fn main() -> Result<(), reqwest::Error> {
     for design in designs {
         let combinations = create_design(design, &patterns, 0, &mut cache);
 
-        if combinations > 0 {
-            valid_designs += 1;
-        }
+        valid_designs += combinations;
     }
 
     println!("{}", valid_designs);
