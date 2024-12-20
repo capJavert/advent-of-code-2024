@@ -9,3 +9,5 @@
 ### Update #4: Friday 13th was yesterday, solving this puzzle a bit late due to some errands I had to run in the city, traffic was terrable, probably due to 13th.. Actually we prepared a pretty cool PS5 dual sense controller for my friend's birthday. I hope he likes it. 😊 Last two days I solved partially (only part 1), and today was a nice throwback to math classes with linear equations, solved both parts in the end!
 
 ### Update #5: This year has a few spicy part 2 puzzles, and my time is limited, did solve every part 1 though and I'll try to see if I can back track at some point (probably not 😀)
+
+### Update #6: Writing this after solving day 19, made basicpattern matching logic but needed some inspiration from reddit (it's late, already 20th of December 🙈). Tomorrow some family is coming and then doing a long run on 21th so let's see how I can catch up.. hoping this weekend puzzles are nice! Also Superman trailer got published today 🦸🐕
