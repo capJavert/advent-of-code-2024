@@ -13,3 +13,5 @@
 ### Update #6: Writing this after solving day 19, made basicpattern matching logic but needed some inspiration from reddit (it's late, already 20th of December 🙈). Tomorrow some family is coming and then doing a long run on 21th so let's see how I can catch up.. hoping this weekend puzzles are nice! Also Superman trailer got published today 🦸🐕
 
 ### Update #7: Long run went great, ran the full 95 kilometers (60 miles). Missed day 21 though, tried to write it but no motivation really, just chilling today. Solved day 22 part 1, looks like this year is just about skipping part 2's. 😅
+
+### Update #8: Solved today's part 1 with ChatGPT, left part 2 for GitHub Copilot.. its still running... let's leave it and see if it spits out the answer while we shovel some snow outside. 🌨️😂
