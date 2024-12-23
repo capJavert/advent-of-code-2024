@@ -11,3 +11,5 @@
 ### Update #5: This year has a few spicy part 2 puzzles, and my time is limited, did solve every part 1 though and I'll try to see if I can back track at some point (probably not 😀)
 
 ### Update #6: Writing this after solving day 19, made basicpattern matching logic but needed some inspiration from reddit (it's late, already 20th of December 🙈). Tomorrow some family is coming and then doing a long run on 21th so let's see how I can catch up.. hoping this weekend puzzles are nice! Also Superman trailer got published today 🦸🐕
+
+### Update #7: Long run went great, ran the full 95 kilometers (60 miles). Missed day 21 though, tried to write it but no motivation really, just chilling today. Solved day 22 part 1, looks like this year is just about skipping part 2's. 😅
