@@ -15,3 +15,5 @@
 ### Update #7: Long run went great, ran the full 95 kilometers (60 miles). Missed day 21 though, tried to write it but no motivation really, just chilling today. Solved day 22 part 1, looks like this year is just about skipping part 2's. 😅
 
 ### Update #8: Solved today's part 1 with ChatGPT, left part 2 for GitHub Copilot.. its still running... let's leave it and see if it spits out the answer while we shovel some snow outside. 🌨️😂
+
+### Update #9: After Xmas and St. Stephen's day I went and solved 24th day as well and since I did not solve everything else I skipped 25th day. At the end I collected 36 stars, with complexity of this year its not that bad. This year most of all I felt (real life) time constraints to solve the puzzles but still enjoyed them. 🎄🎅 That said, even though this was AoC 10th year (congratz [@topaz](https://github.com/topaz)!!), for me it's a 9th year of doing AoC (I skipped the first year) so next year, at my personal 10th AoC anniversary it is going to be my last year doing AoC. See ya next year!
